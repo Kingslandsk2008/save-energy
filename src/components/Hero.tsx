@@ -1,8 +1,7 @@
 import React from "react";
 import { MessageCircle, ArrowRight, ShieldCheck, Award, ThumbsUp, HelpCircle, Sun } from "lucide-react";
 import { motion } from "motion/react";
-
-const solarHomeImg = "/src/assets/images/solar_home_1781318242090.jpg";
+import solarHomeImg from "../assets/images/solar_home_1781318242090.jpg";
 
 interface HeroProps {
   phoneNumber: string;
