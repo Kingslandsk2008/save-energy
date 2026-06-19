@@ -7,3 +7,5 @@ coverage/
 .env*
 !.env.example
 push.ts
+deploy.ts
+.env

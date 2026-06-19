@@ -6,6 +6,7 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import BrandCarousel from "./components/BrandCarousel";
 import Services from "./components/Services";
 import Benefits from "./components/Benefits";
 import SubsidySection from "./components/SubsidySection";
@@ -29,6 +30,9 @@ export default function App() {
 
       {/* Hero Header Presentation */}
       <Hero phoneNumber={phoneNumber} phoneNumber2={phoneNumber2} phoneNumber3={phoneNumber3} />
+
+      {/* Infinite Scrolling Solar Brands Partner Section */}
+      <BrandCarousel />
 
       {/* Premium Services Category Grid */}
       <Services />
