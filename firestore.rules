@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reviews rules
+    match /reviews/{reviewId} {
+      // Anyone can fetch individual reviews or list them
+      allow get, list: if true;
+      
+      // Creating a review requires:
+      // 1. Strict content schema & type validation
+      // 2. ID validation
+      allow create: if isValidId(reviewId)
+        && isValidReview(request.resource.data);
+
+      // Reviews are immutable once created
+      allow update, delete: if false;
+    }
+
+    // Leads / Inquiries collection rules
+    match /leads/{leadId} {
+      // Anyone can submit leads, list/get reads are allowed
+      allow get, list: if true;
+      allow create: if isValidId(leadId) && isValidLead(request.resource.data);
+      allow update, delete: if false;
+    }
+
+    // Projects collection rules
+    match /projects/{projectId} {
+      // Public-facing projects showcase
+      allow get, list: if true;
+      allow create: if isValidId(projectId) && isValidProject(request.resource.data);
+      allow update: if false;
+      allow delete: if true; // Allows dynamic removal of case studies
+    }
+
+    // ID Validation Helper
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Review Validation Helper
+    function isValidReview(data) {
+      return data.keys().hasAll(['name', 'city', 'rating', 'comment', 'createdAt'])
+        && data.keys().size() <= 8
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.city is string && data.city.size() > 0 && data.city.size() <= 100
+        && data.comment is string && data.comment.size() > 0 && data.comment.size() <= 1000
+        && data.rating is int && data.rating >= 1 && data.rating <= 5
+        && data.createdAt is string && data.createdAt.size() > 0 && data.createdAt.size() <= 100
+        && (!data.keys().hasAny(['role']) || (data.role is string && data.role.size() <= 100))
+        && (!data.keys().hasAny(['billBefore']) || (data.billBefore is string && data.billBefore.size() <= 50))
+        && (!data.keys().hasAny(['billAfter']) || (data.billAfter is string && data.billAfter.size() <= 50));
+    }
+
+    // Lead Validation Helper
+    function isValidLead(data) {
+      return data.keys().hasAll(['inquiryId', 'name', 'phone', 'city', 'address', 'monthlyBill', 'systemSize', 'estCost', 'subsidy', 'netCost', 'emi', 'createdAt'])
+        && data.keys().size() == 12
+        && data.inquiryId is string && data.inquiryId.size() > 0 && data.inquiryId.size() <= 100
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.phone is string && data.phone.size() > 0 && data.phone.size() <= 30
+        && data.city is string && data.city.size() > 0 && data.city.size() <= 100
+        && data.address is string && data.address.size() > 0 && data.address.size() <= 500
+        && (data.monthlyBill is int || data.monthlyBill is float)
+        && (data.systemSize is int || data.systemSize is float)
+        && (data.estCost is int || data.estCost is float)
+        && (data.subsidy is int || data.subsidy is float)
+        && (data.netCost is int || data.netCost is float)
+        && (data.emi is int || data.emi is float)
+        && data.createdAt == request.time;
+    }
+
+    // Project Validation Helper
+    function isValidProject(data) {
+      return data.keys().hasAll(['title', 'category', 'location', 'systemSize', 'saving', 'img', 'desc', 'createdAt'])
+        && data.keys().size() == 8
+        && data.title is string && data.title.size() > 0 && data.title.size() <= 200
+        && data.category is string && data.category.size() > 0 && data.category.size() <= 100
+        && data.location is string && data.location.size() > 0 && data.location.size() <= 200
+        && data.systemSize is string && data.systemSize.size() > 0 && data.systemSize.size() <= 200
+        && data.saving is string && data.saving.size() > 0 && data.saving.size() <= 200
+        && data.img is string && data.img.size() > 0 && data.img.size() <= 1048576
+        && data.desc is string && data.desc.size() > 0 && data.desc.size() <= 5000
+        && data.createdAt is string && data.createdAt.size() > 0 && data.createdAt.size() <= 100;
+    }
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Review",
+      "description": "A verified customer review submitted by a user",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Customer's name"
+        },
+        "role": {
+          "type": "string",
+          "description": "Customer's role/segment, e.g. Residential Owner"
+        },
+        "city": {
+          "type": "string",
+          "description": "City of residence in India"
+        },
+        "rating": {
+          "type": "integer",
+          "description": "Rating out of 5 stars"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Review feedback comment content"
+        },
+        "billBefore": {
+          "type": "string",
+          "description": "Electricity bill before solar setup"
+        },
+        "billAfter": {
+          "type": "string",
+          "description": "Electricity bill after solar setup"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the review was submitted"
+        }
+      },
+      "required": ["name", "city", "rating", "comment", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A dynamic solar installation project case study",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Project title or name"
+        },
+        "category": {
+          "type": "string",
+          "description": "Project category (Residential, Commercial, Industrial)"
+        },
+        "location": {
+          "type": "string",
+          "description": "City/Region location"
+        },
+        "systemSize": {
+          "type": "string",
+          "description": "Size and specs of solar system"
+        },
+        "saving": {
+          "type": "string",
+          "description": "Monthly or periodic savings details"
+        },
+        "img": {
+          "type": "string",
+          "description": "Base64 encoded image or web URL of the project"
+        },
+        "desc": {
+          "type": "string",
+          "description": "Detailed description of the solar case study"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["title", "category", "location", "systemSize", "saving", "img", "desc", "createdAt"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "A customer inquiry or solar lead",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Customer's name"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number"
+        },
+        "city": {
+          "type": "string",
+          "description": "City of residence"
+        },
+        "address": {
+          "type": "string",
+          "description": "Complete site address"
+        },
+        "systemSize": {
+          "type": "number",
+          "description": "Calculated solar system size in kW"
+        },
+        "monthlySavings": {
+          "type": "number",
+          "description": "Calculated monthly financial savings"
+        },
+        "billBefore": {
+          "type": "string",
+          "description": "Electricity bill before solar"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Inquiry creation timestamp"
+        }
+      },
+      "required": ["name", "phone", "city", "address", "systemSize", "monthlySavings", "billBefore", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Collection of customer-submitted solar reviews"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Collection of dynamic solar installation projects"
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Collection of customer-submitted inquiries and solar leads"
+    }
+  }
+}
